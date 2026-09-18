@@ -1,0 +1,32 @@
+{
+  "game": "Mega Man Legends",
+  "region": "North America",
+  "serial": "SLUS-00603",
+  "disc": {
+    "format": "CloneCD raw 2352-byte sectors",
+    "volume_id": "MEGAMAN_LEGENDS",
+    "data_track_lba_start": 0,
+    "audio_track_lba_start": 207295,
+    "sha256": {
+      "ccd": "7c44de2538b5e6576d09ad846358e89c90f4479fd2fb57fa666d3a3d95cea53f",
+      "img": "7d1a5c0c777a5797c73f8ed42db9be3da893e5b179c50d47b5cc32e634d6083",
+      "sub": "165b3da3b06b1f85a2ec7ed3f6fb0cb8c72b76d1c738a0606c0a8773bb5b59c3"
+    }
+  },
+  "executables": {
+    "SLUS_006.03": {
+      "role": "disc boot executable",
+      "sha256": "469670a017e9301ea6c7cd75cc5cfc1b919b839a62f73e69a979f8dafbe80cac",
+      "entry_point": "0x8001262c",
+      "load_address": "0x80010000",
+      "load_size": 303104
+    },
+    "ROCK_NEO.EXE": {
+      "role": "main game executable (strong inference; verify loader call)",
+      "sha256": "10d2008f2837c466b8a3c3f56ff9b0946096ef29d7f26f09010d78ed4b2568f0",
+      "entry_point": "0x80068000",
+      "load_address": "0x80010000",
+      "load_size": 823296
+    }
+  }
+}

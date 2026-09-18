@@ -1,0 +1,24 @@
+# Original disc media (never commit copyrighted inputs)
+*.bin
+*.ccd
+*.chd
+*.cue
+*.img
+*.iso
+*.sub
+
+# Generated extraction and analysis output
+build/
+extracted/
+__pycache__/
+*.pyc
+
+# Reverse-engineering tools
+tools/third_party/
+
+# Editor and OS noise
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
