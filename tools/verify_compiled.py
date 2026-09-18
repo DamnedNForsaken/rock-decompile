@@ -8,14 +8,14 @@ import subprocess
 from pathlib import Path
 
 if __package__:
-    from .flags_model import execute_flag_query
+    from .flags_model import execute_flag_query, execute_flag_set
     from .counter_model import execute_counter
     from .analyze_mips import Executable
     from .rock_iteration import EXPECTED, execute_initializer
     from .scheduler_iteration import START, RESUME, original_eligibility
     from .thread_handoff_iteration import request_events
 else:
-    from flags_model import execute_flag_query
+    from flags_model import execute_flag_query, execute_flag_set
     from counter_model import execute_counter
     from analyze_mips import Executable
     from rock_iteration import EXPECTED, execute_initializer
@@ -44,6 +44,8 @@ def verify(exe, dll):
     lib.RockCounter_Tick.restype = None
     lib.RockFlags_Test.argtypes = [C.POINTER(C.c_uint8), C.c_uint32]
     lib.RockFlags_Test.restype = C.c_int
+    lib.RockFlags_Set.argtypes = [C.POINTER(C.c_uint8), C.c_uint32]
+    lib.RockFlags_Set.restype = None
     rng = random.Random(60304)
     words = [exe.word(a) for a in range(0x800680bc, 0x80068120, 4)]
     init_count = 0
@@ -51,7 +53,6 @@ def verify(exe, dll):
         for high in (0, 0x12345600, 0xffffff00):
             initial = bytes(rng.randrange(256) for _ in range(18))
             expected = execute_initializer(words, high | low, initial)
-            # Surround the output with sentinels to detect nearby stray writes.
             buf = (C.c_uint8 * 50).from_buffer_copy(bytes([0xa5] * 16) + initial + bytes([0x5a] * 16))
             pointer = C.cast(C.byref(buf, 16), C.POINTER(C.c_uint8))
             lib.RockState_Init(pointer, high | low)
@@ -60,8 +61,6 @@ def verify(exe, dll):
             init_count += 1
     code = {a: exe.word(a) for a in range(START, RESUME, 4)}
     scheduler_count = 0
-    # Every timed countdown, plus each other status at multiple representative
-    # countdowns. This is not all 2^32 possible status/countdown pairs.
     for status in range(65536):
         values = range(65536) if status == 1 else (0, 1, 2, 32768, 65535)
         for ticks in values:
@@ -95,8 +94,6 @@ def verify(exe, dll):
             raise ValueError(f'compiled counter mismatch: {value:#x}')
     flag_cases = 0
     flags = (C.c_uint8 * 8192)(*[rng.randrange(256) for _ in range(8192)])
-    # Every byte value and bit position at representative byte addresses.
-    # The allocation is test storage, not a claim about original table capacity.
     for index in (0, 1, 159, 160, 175, 8191):
         for value in range(256):
             flags[index] = value
@@ -106,11 +103,20 @@ def verify(exe, dll):
                 if lib.RockFlags_Test(flags, identifier) != expected:
                     raise ValueError(f'compiled flag query mismatch: {identifier}, {value}')
                 flag_cases += 1
+    set_cases = 0
+    set_flags = (C.c_uint8 * 8192)(*[rng.randrange(256) for _ in range(8192)])
+    for identifier in [0, 1, 7, 8, 510, 906, 967, 1319] + [rng.randrange(8192 * 8) for _ in range(256)]:
+        before = bytes(set_flags)
+        expected = execute_flag_set(exe, before, identifier)
+        lib.RockFlags_Set(set_flags, identifier)
+        if bytes(set_flags) != expected:
+            raise ValueError(f'compiled flag set mismatch: {identifier}')
+        set_cases += 1
     return {'dll': str(dll.relative_to(ROOT)),
             'dll_sha256': hashlib.sha256(dll.read_bytes()).hexdigest(),
             'initializer_cases': init_count, 'scheduler_cases': scheduler_count,
             'replacement_cases': len(entries), 'counter_cases': len(counter_inputs),
-            'flag_query_cases': flag_cases, 'result': 'pass'}
+            'flag_query_cases': flag_cases, 'flag_set_cases': set_cases, 'result': 'pass'}
 
 
 def main():
