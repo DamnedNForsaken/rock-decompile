@@ -2,7 +2,7 @@
 
 The three recovered C behaviors now compile and pass differential checks against
 the original instruction models. Visual Studio 2026 Community was already
-installed under `C:\Program Files\Microsoft Visual Studio\18\Community`; its
+installed under `C:\\Program Files\\Microsoft Visual Studio\\18\\Community`; its
 compiler was absent from PATH in the earlier investigation. No installation was
 needed.
 
@@ -18,7 +18,7 @@ The script initializes the x64 MSVC environment, builds both C sources into DLLs
 with `/Od` and `/O2`, and calls the exported functions through Python ctypes.
 Both configurations use C11 and `/W4 /WX` (warnings treated as errors).
 To use another Visual Studio installation, set `ROCK_VCVARS` to its
-`VC\Auxiliary\Build\vcvars64.bat` before running the script.
+`VC\\Auxiliary\\Build\\vcvars64.bat` before running the script.
 
 Compiler diagnostics/version go to `build/host/build.log`. Results, input image
 hash, source/tool hashes, and DLL hashes go to `build/host/verification.json`.
@@ -45,6 +45,11 @@ recorded in the previous three iteration reports.
 Subsequently, `RockCounter_Tick` was added with 10007 passing cases per build.
 The current runner tests four behaviors and performs 808492 total comparisons.
 See `rock-neo-iteration-4.md` for its scope and overflow edge case.
+
+`RockFlags_Set` is exported next to `RockFlags_Test`. Query cases are unchanged.
+Set cases compare compiled stores to `execute_flag_set` over observed IDs plus
+256 random identifiers. Run `verify_compiled.py` locally against `ROCK_NEO.EXE`
+to add those original-instruction comparisons.
 
 ## Limits
 

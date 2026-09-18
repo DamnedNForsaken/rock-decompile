@@ -76,3 +76,13 @@ launch path before naming any reconstructed functions.
 - Traced numeric-ID calls to a bitset write; asset-loading interpretation unproven.
 - See `docs/rock-neo-iteration-4.md` for evidence and reproduction.
 - Details and possible next steps: `docs/rock-neo-iteration-3.md`.
+
+## Flag-set iteration
+
+- Reconstructed `RockFlags_Set` from the documented OR/mask rule at `0x8001da8c`.
+- Added a restricted original-instruction interpreter for that listing range.
+- Host gcc smoke tests match the documented model; MSVC differential checks
+  against original words remain a local `verify_compiled.py` step.
+- Listed a prefix of phase 2 at `0x80015840` for the next static pass. No
+  emulator or on-screen identity is claimed.
+- See `docs/rock-neo-iteration-5.md`.
