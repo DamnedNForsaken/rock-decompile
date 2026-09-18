@@ -43,3 +43,7 @@ address,type,name,confidence,evidence
 0x80098158,data,StartupZeroFillBegin,confirmed,"First zero-fill store address"
 0x800c3560,data,RockState_ByteView,strong,"18-byte view covering initializer writes; full object extent unknown"
 0x800c5688,data,StartupZeroFillEnd,confirmed,"Exclusive bound of startup zero-fill loop"
+0x80015840,function,RockPhase_15840,provisional,"Phase-2 handler after 0x80015734; listing prefix only, extent unproven"
+0x8001da58,function,RockFlags_Test,strong,"Complete leaf through 0x8001da8c; MSB-first bit query at 0x800be378"
+0x8001da8c,function,RockFlags_Set,strong,"Listing through 0x8001dad0; OR of 0x80>>(id&7) into flags[id>>3]; compiled vs original pending local EXE run"
+0x800be378,data,g_RockFlags,strong,"Bitset base for Test/Set; table capacity unresolved"
