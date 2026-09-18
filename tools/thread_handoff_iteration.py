@@ -82,6 +82,8 @@ def generate(image, output):
         ('phase_15734', 0x80015734, 0x80015840),
         ('counter', 0x80016bc0, 0x80016bf4),
         ('numeric_id_bitset_prefix', 0x8001da8c, 0x8001dad0),
+        ('flag_set', 0x8001da8c, 0x8001dad0),
+        ('phase_15840_prefix', 0x80015840, 0x80015a00),
         ('initial_thread', 0x800131fc, 0x8001326c),
         ('initialize_phase', 0x8001326c, 0x800133d8),
         ('replace_phase', 0x800133d8, 0x80013420),
